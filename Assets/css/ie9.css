@@ -24,7 +24,7 @@
 		color: #c8cccf;
 	}
 
-	ul.icons li a:hover:before {
+    ul.icons li a :hover:before {
 		color: #ff7496;
 	}
 

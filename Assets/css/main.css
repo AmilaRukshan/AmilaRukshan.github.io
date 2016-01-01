@@ -548,6 +548,18 @@
 					ul.icons li a:hover:before {
 						text-shadow: 1.25px 0px 0px #ff7496, -1.25px 0px 0px #ff7496, 0px 1.25px 0px #ff7496, 0px -1.25px 0px #ff7496;
 					}
+                    
+                    ul.icons li a.fa-twitter:hover:before {
+						text-shadow: 1.25px 0px 0px #4099FF, -1.25px 0px 0px #4099FF, 0px 1.25px 0px #4099FF, 0px -1.25px 0px #4099FF;
+					}
+                    
+                      ul.icons li a.fa-facebook:hover:before {
+						text-shadow: 1.25px 0px 0px #6D8BC9, -1.25px 0px 0px #6D8BC9, 0px 1.25px 0px #6D8BC9, 0px -1.25px 0px #6D8BC9;
+					}
+                    
+                    ul.icons li a.fa-google-plus:hover:before {
+						text-shadow: 1.25px 0px 0px #DD4B39, -1.25px 0px 0px #DD4B39, 0px 1.25px 0px #DD4B39, 0px -1.25px 0px #DD4B39;
+					}
 
 					ul.icons li a:before {
 						position: absolute;
