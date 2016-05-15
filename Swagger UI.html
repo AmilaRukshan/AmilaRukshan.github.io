@@ -1,0 +1,2695 @@
+<!DOCTYPE html>
+<!-- saved from url=(0039)http://localhost:61181/swagger/ui/index -->
+<html class="gr__localhost"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  
+  <title>Swagger UI</title>
+  <link rel="icon" type="image/png" href="http://localhost:61181/swagger/ui/images/favicon-32x32-png" sizes="32x32">
+  <link rel="icon" type="image/png" href="http://localhost:61181/swagger/ui/images/favicon-16x16-png" sizes="16x16">
+  <link href="./Swagger UI_files/typography-css" media="screen" rel="stylesheet" type="text/css">
+  <link href="./Swagger UI_files/reset-css" media="screen" rel="stylesheet" type="text/css">
+  <link href="./Swagger UI_files/screen-css" media="screen" rel="stylesheet" type="text/css">
+  <link href="./Swagger UI_files/reset-css" media="print" rel="stylesheet" type="text/css">
+  <link href="./Swagger UI_files/print-css" media="print" rel="stylesheet" type="text/css">
+  
+  <style type="text/css"></style><script src="./Swagger UI_files/jquery-1-8-0-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/jquery-slideto-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/jquery-wiggle-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/jquery-ba-bbq-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/handlebars-2-0-0-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/underscore-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/backbone-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/swagger-ui-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/highlight-7-3-pack-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/jsoneditor-min-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/marked-js" type="text/javascript"></script>
+  <script src="./Swagger UI_files/swagger-oauth-js" type="text/javascript"></script>
+
+  <!-- Some basic translations -->
+  <!-- <script src='lang/translator.js' type='text/javascript'></script> -->
+  <!-- <script src='lang/ru.js' type='text/javascript'></script> -->
+  <!-- <script src='lang/en.js' type='text/javascript'></script> -->
+
+  <script type="text/javascript">
+    $(function () {
+      var url = window.location.search.match(/url=([^&]+)/);
+      if (url && url.length > 1) {
+        url = decodeURIComponent(url[1]);
+      } else {
+        url = "http://petstore.swagger.io/v2/swagger.json";
+      }
+
+      // Get Swashbuckle config into JavaScript
+      function arrayFrom(configString) {
+        return (configString !== "") ? configString.split('|') : [];
+      }
+
+      function stringOrNullFrom(configString) {
+        return (configString !== "null") ? configString : null;
+      }
+
+      window.swashbuckleConfig = {
+        rootUrl: 'http://localhost:61181',
+        discoveryPaths: arrayFrom('swagger/docs/v1'),
+        booleanValues: arrayFrom('true|false'),
+        validatorUrl: stringOrNullFrom(''),
+        customScripts: arrayFrom(''),
+        docExpansion: 'none',
+        oAuth2Enabled: ('false' == 'true'),
+        oAuth2ClientId: '',
+        oAuth2ClientSecret: '',
+        oAuth2Realm: '',
+        oAuth2AppName: '',
+        oAuth2ScopeSeperator: ' ',
+        oAuth2AdditionalQueryStringParams: JSON.parse('{}')
+      };
+
+      // Pre load translate...
+      if(window.SwaggerTranslator) {
+        window.SwaggerTranslator.translate();
+      }
+      window.swaggerUi = new SwaggerUi({
+        url: swashbuckleConfig.rootUrl + "/" + swashbuckleConfig.discoveryPaths[0],
+        dom_id: "swagger-ui-container",
+        booleanValues: swashbuckleConfig.booleanValues,
+        onComplete: function(swaggerApi, swaggerUi){
+          if (typeof initOAuth == "function" && swashbuckleConfig.oAuth2Enabled) {
+            initOAuth({
+              clientId: swashbuckleConfig.oAuth2ClientId,
+              clientSecret: swashbuckleConfig.oAuth2ClientSecret,
+              realm: swashbuckleConfig.oAuth2Realm,
+              appName: swashbuckleConfig.oAuth2AppName,
+              scopeSeparator: swashbuckleConfig.oAuth2ScopeSeperator,
+              additionalQueryStringParams: swashbuckleConfig.oAuth2AdditionalQueryStringParams
+            });
+          }
+
+          if(window.SwaggerTranslator) {
+            window.SwaggerTranslator.translate();
+          }
+
+          $('pre code').each(function(i, e) {
+            hljs.highlightBlock(e)
+          });
+
+          addApiKeyAuthorization();
+
+          window.swaggerApi = swaggerApi;
+          _.each(swashbuckleConfig.customScripts, function (script) {
+            $.getScript(script);
+          });
+        },
+        onFailure: function(data) {
+          log("Unable to Load SwaggerUI");
+        },
+        docExpansion: swashbuckleConfig.docExpansion,
+        jsonEditor: false,
+        apisSorter: null, // default to server
+        defaultModelRendering: 'schema',
+        showRequestHeaders: false
+      });
+
+      if (window.swashbuckleConfig.validatorUrl !== '')
+        window.swaggerUi.options.validatorUrl = window.swashbuckleConfig.validatorUrl;
+
+      function addApiKeyAuthorization(){
+        var key = encodeURIComponent($('#input_apiKey')[0].value);
+        if (key && key.trim() != "") {
+          var apiKeyAuth = new SwaggerClient.ApiKeyAuthorization("api_key", key, "query");
+            window.swaggerUi.api.clientAuthorizations.add("api_key", apiKeyAuth);
+            log("added key " + key);
+        }
+      }
+
+      $('#input_apiKey').change(addApiKeyAuthorization);
+
+      // if you have an apiKey you would like to pre-populate on the page for demonstration purposes...
+      /*
+        var apiKey = "myApiKeyXXXX123456789";
+        $('#input_apiKey').val(apiKey);
+      */
+
+      window.swaggerUi.load();
+
+      function log() {
+        if ('console' in window) {
+          console.log.apply(console, arguments);
+        }
+      }
+  });
+  </script>
+</head>
+
+<div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(519.5px, 1863.66px);" data-grammarly-reactid=".2"><div class="_44eb54-panel" data-grammarly-reactid=".2.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".2.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".2.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".2.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".2.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".2.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(614.5px, 1878.66px);" data-grammarly-reactid=".1"><div class="_44eb54-panel" data-grammarly-reactid=".1.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".1.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".1.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".1.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".1.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".1.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform:translate(NaNpx, NaNpx);" data-grammarly-reactid=".5"><div class="_44eb54-panel" data-grammarly-reactid=".5.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".5.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".5.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".5.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".5.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".5.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform:translate(NaNpx, NaNpx);" data-grammarly-reactid=".4"><div class="_44eb54-panel" data-grammarly-reactid=".4.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".4.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".4.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".4.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".4.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".4.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(517.5px, 2912.09px);" data-grammarly-reactid=".8"><div class="_44eb54-panel" data-grammarly-reactid=".8.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".8.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".8.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".8.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".8.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".8.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(612.5px, 2927.09px);" data-grammarly-reactid=".7"><div class="_44eb54-panel" data-grammarly-reactid=".7.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".7.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".7.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".7.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".7.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".7.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform:translate(NaNpx, NaNpx);" data-grammarly-reactid=".b"><div class="_44eb54-panel" data-grammarly-reactid=".b.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".b.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".b.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".b.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".b.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".b.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform:translate(NaNpx, NaNpx);" data-grammarly-reactid=".a"><div class="_44eb54-panel" data-grammarly-reactid=".a.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".a.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".a.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".a.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".a.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".a.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(519.5px, 4774.44px);" data-grammarly-reactid=".e"><div class="_44eb54-panel" data-grammarly-reactid=".e.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".e.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".e.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".e.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".e.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".e.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(614.5px, 4789.44px);" data-grammarly-reactid=".d"><div class="_44eb54-panel" data-grammarly-reactid=".d.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".d.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".d.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".d.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".d.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".d.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform:translate(NaNpx, NaNpx);" data-grammarly-reactid=".h"><div class="_44eb54-panel" data-grammarly-reactid=".h.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".h.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".h.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".h.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".h.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".h.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform:translate(NaNpx, NaNpx);" data-grammarly-reactid=".g"><div class="_44eb54-panel" data-grammarly-reactid=".g.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".g.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".g.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".g.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".g.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".g.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(520.5px, 6973.44px);" data-grammarly-reactid=".k"><div class="_44eb54-panel" data-grammarly-reactid=".k.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".k.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".k.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".k.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".k.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".k.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(615.5px, 6988.44px);" data-grammarly-reactid=".j"><div class="_44eb54-panel" data-grammarly-reactid=".j.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".j.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".j.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".j.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".j.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".j.0.5"></div></div></div></div><div class="gr-top-z-index gr-top-zero"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(520.5px, 8439.44px);" data-grammarly-reactid=".n"><div class="_44eb54-panel" data-grammarly-reactid=".n.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".n.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".n.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".n.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".n.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".n.0.5"></div></div></div></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"><div class="_44eb54-hoverMenu _44eb54-referral" style="transform: translate(615.5px, 8454.44px);" data-grammarly-reactid=".m"><div class="_44eb54-panel" data-grammarly-reactid=".m.0"><div class="_44eb54-tooltip _44eb54-tooltip_hidden undefined" data-grammarly-reactid=".m.0.0"></div><div class="_44eb54-btn _44eb54-btn_disable" data-grammarly-reactid=".m.0.1"></div><div class="_44eb54-btn _44eb54-btn_referral" data-grammarly-reactid=".m.0.2"></div><div class="_44eb54-line" data-grammarly-reactid=".m.0.3"></div><div class="_44eb54-btn _44eb54-btn_grammarly" data-grammarly-reactid=".m.0.5"></div></div></div></div><body class="swagger-section" data-gr-c-s-loaded="true">
+<div id="header">
+  <div class="swagger-ui-wrap">
+    <a id="logo" href="http://swagger.io/">swagger</a>
+    <form id="api_selector">
+      <div class="input"><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"></div>
+      <div class="input"><input placeholder="api_key" id="input_apiKey" name="apiKey" type="text"></div>
+      <div class="input"><a id="explore" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Explore</a></div>
+    </form>
+  </div>
+</div>
+
+<div id="message-bar" class="swagger-ui-wrap message-success" data-sw-translate=""></div>
+<div id="swagger-ui-container" class="swagger-ui-wrap"><div class="info" id="api_info">
+  <div class="info_title">BuzzWebApplication</div>
+  <div class="info_description markdown"></div>
+  
+  
+  
+  
+  
+</div>
+<div class="container" id="resources_container">
+  <ul id="resources"><li id="resource_Account" class="resource active"><div class="heading">
+  <h2>
+    <a href="http://localhost:61181/swagger/ui/index#!/Account" class="toggleEndpointList" data-id="Account">Account</a> 
+  </h2>
+  <ul class="options">
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#!/Account" id="endpointListTogger_Account" class="toggleEndpointList" data-id="Account" data-sw-translate="">Show/Hide</a>
+    </li>
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#" class="collapseResource" data-id="Account" data-sw-translate="">
+        List Operations
+      </a>
+    </li>
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#" class="expandResource" data-id="Account" data-sw-translate="">
+        Expand Operations
+      </a>
+    </li>
+  </ul>
+</div>
+<ul class="endpoints" id="Account_endpoint_list">
+
+<li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Account_Account_GetUserInfo">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetUserInfo" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetUserInfo" class="toggleOperation ">/api/Account/UserInfo</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetUserInfo" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_GetUserInfo_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">UserInfoViewModel {</span><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">HasRegistered</span> (<span class="propType">boolean</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">LoginProvider</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">HasRegistered</span>": <span class="value"><span class="literal">true</span></span>,
+  "<span class="attribute">LoginProvider</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.8660231026415901">Response Content Type</label>
+<select name="responseContentType" id="rct0.8660231026415901">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_Logout">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_Logout" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_Logout" class="toggleOperation ">/api/Account/Logout</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_Logout" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_Logout_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.5763698255081362">Response Content Type</label>
+<select name="responseContentType" id="rct0.5763698255081362">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Account_Account_GetManageInfoByreturnUrlgenerateState">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetManageInfoByreturnUrlgenerateState" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetManageInfoByreturnUrlgenerateState" class="toggleOperation ">/api/Account/ManageInfo</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetManageInfoByreturnUrlgenerateState" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_GetManageInfoByreturnUrlgenerateState_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: block;">
+    <span class="strong">ManageInfoViewModel {</span><div><span class="propName ">LocalLoginProvider</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Logins</span> (<span class="propType">Array[UserLoginInfoViewModel]</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">ExternalLoginProviders</span> (<span class="propType">Array[ExternalLoginViewModel]</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span><br><span class="strong">UserLoginInfoViewModel {</span><div><span class="propName ">LoginProvider</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">ProviderKey</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span><br><span class="strong">ExternalLoginViewModel {</span><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Url</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">State</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{
+  "<span class="attribute">LocalLoginProvider</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Logins</span>": <span class="value">[
+    {
+      "<span class="attribute">LoginProvider</span>": <span class="value"><span class="string">"string"</span></span>,
+      "<span class="attribute">ProviderKey</span>": <span class="value"><span class="string">"string"</span>
+    }</span>
+  ]</span>,
+  "<span class="attribute">ExternalLoginProviders</span>": <span class="value">[
+    {
+      "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+      "<span class="attribute">Url</span>": <span class="value"><span class="string">"string"</span></span>,
+      "<span class="attribute">State</span>": <span class="value"><span class="string">"string"</span>
+    }</span>
+  ]
+}</span></code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.5543052590222546">Response Content Type</label>
+<select name="responseContentType" id="rct0.5543052590222546">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mreturnUrl0.552429104091718">returnUrl</label></td>
+<td>
+<input class="parameter required" minlength="1" name="returnUrl" placeholder="(required)" id="mreturnUrl0.552429104091718" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>query</td>
+<td><span class="model-signature">string</span></td>
+</tr><tr><td class="code"><label for="mgenerateState0.7725611712902636">generateState</label></td>
+<td>
+  <select class="parameter " name="generateState" id="mgenerateState0.7725611712902636">
+
+      <option selected="" value=""></option>
+
+
+      <option value="true"> true  </option>
+
+
+      <option value="false"> false  </option>
+
+
+  </select>
+</td>
+<td class="markdown"></td>
+<td>query</td>
+<td><span class="model-signature">boolean</span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_ChangePasswordBymodel">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_ChangePasswordBymodel" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_ChangePasswordBymodel" class="toggleOperation ">/api/Account/ChangePassword</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_ChangePasswordBymodel" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_ChangePasswordBymodel_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: block;">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.5718977947061163">Response Content Type</label>
+<select name="responseContentType" id="rct0.5718977947061163">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mmodel0.5472607730741201">model</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="model" id="mmodel0.5472607730741201"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(588.5px, 1867.66px);" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".0"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".0.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".0.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.8022085207199312" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.8022085207199312">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">ChangePasswordBindingModel {</span><div><span class="propName required">OldPassword</span> (<span class="propType">string</span>),</div><span class="propWrap"><div><span class="propName required">NewPassword</span> (<span class="propType">string</span>)<table class="optionsWrapper"><tbody><tr><th colspan="2">string</th></tr><tr><td class="optionName">Min. Length:</td><td>6</td></tr><tr><td class="optionName">Max. Length:</td><td>100</td></tr></tbody></table>,</div><div><span class="propName ">ConfirmPassword</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </span></div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">OldPassword</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">NewPassword</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">ConfirmPassword</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_SetPasswordBymodel">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_SetPasswordBymodel" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_SetPasswordBymodel" class="toggleOperation ">/api/Account/SetPassword</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_SetPasswordBymodel" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_SetPasswordBymodel_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.2714733237862059">Response Content Type</label>
+<select name="responseContentType" id="rct0.2714733237862059">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mmodel0.281848997499889">model</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="model" id="mmodel0.281848997499889"></textarea><grammarly-btn><div style="visibility: hidden; z-index: 2;" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".3"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".3.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".3.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.32279491614803546" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.32279491614803546">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">SetPasswordBindingModel {</span><span class="propWrap"><div><span class="propName required">NewPassword</span> (<span class="propType">string</span>)<table class="optionsWrapper"><tbody><tr><th colspan="2">string</th></tr><tr><td class="optionName">Min. Length:</td><td>6</td></tr><tr><td class="optionName">Max. Length:</td><td>100</td></tr></tbody></table>,</div><div><span class="propName ">ConfirmPassword</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </span></div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">NewPassword</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">ConfirmPassword</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_AddExternalLoginBymodel">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_AddExternalLoginBymodel" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_AddExternalLoginBymodel" class="toggleOperation ">/api/Account/AddExternalLogin</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_AddExternalLoginBymodel" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_AddExternalLoginBymodel_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.7435969328648164">Response Content Type</label>
+<select name="responseContentType" id="rct0.7435969328648164">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mmodel0.38380520962910003">model</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="model" id="mmodel0.38380520962910003"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(586.5px, 2916.09px);" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".6"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".6.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".6.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.3323066872995226" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.3323066872995226">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">AddExternalLoginBindingModel {</span><div><span class="propName required">ExternalAccessToken</span> (<span class="propType">string</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">ExternalAccessToken</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_RemoveLoginBymodel">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RemoveLoginBymodel" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RemoveLoginBymodel" class="toggleOperation ">/api/Account/RemoveLogin</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RemoveLoginBymodel" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_RemoveLoginBymodel_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.41640263230149466">Response Content Type</label>
+<select name="responseContentType" id="rct0.41640263230149466">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mmodel0.6397755537042611">model</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="model" id="mmodel0.6397755537042611"></textarea><grammarly-btn><div style="visibility: hidden; z-index: 2;" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".9"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".9.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".9.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.4899808966734527" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.4899808966734527">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">RemoveLoginBindingModel {</span><div><span class="propName required">LoginProvider</span> (<span class="propType">string</span>),</div><div><span class="propName required">ProviderKey</span> (<span class="propType">string</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">LoginProvider</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">ProviderKey</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Account_Account_GetExternalLoginByprovidererror">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetExternalLoginByprovidererror" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetExternalLoginByprovidererror" class="toggleOperation ">/api/Account/ExternalLogin</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetExternalLoginByprovidererror" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_GetExternalLoginByprovidererror_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.5256303305254031">Response Content Type</label>
+<select name="responseContentType" id="rct0.5256303305254031">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mprovider0.729927996810801">provider</label></td>
+<td>
+<input class="parameter required" minlength="1" name="provider" placeholder="(required)" id="mprovider0.729927996810801" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>query</td>
+<td><span class="model-signature">string</span></td>
+</tr><tr><td class="code"><label for="merror0.809105107091481">error</label></td>
+<td>
+
+<input class="parameter" minlength="0" name="error" placeholder="" id="merror0.809105107091481" type="text" value="">
+</td>
+<td class="markdown"></td>
+<td>query</td>
+<td>
+	<span class="model-signature">string</span>
+</td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Account_Account_GetExternalLoginsByreturnUrlgenerateState">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetExternalLoginsByreturnUrlgenerateState" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetExternalLoginsByreturnUrlgenerateState" class="toggleOperation ">/api/Account/ExternalLogins</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_GetExternalLoginsByreturnUrlgenerateState" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_GetExternalLoginsByreturnUrlgenerateState_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Inline Model [</span><div>ExternalLoginViewModel</div><span class="strong">]</span><br><span class="strong">ExternalLoginViewModel {</span><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Url</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">State</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">[
+  {
+    "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">Url</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">State</span>": <span class="value"><span class="string">"string"</span>
+  }</span>
+]</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.5660310395087207">Response Content Type</label>
+<select name="responseContentType" id="rct0.5660310395087207">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mreturnUrl0.1868562172564847">returnUrl</label></td>
+<td>
+<input class="parameter required" minlength="1" name="returnUrl" placeholder="(required)" id="mreturnUrl0.1868562172564847" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>query</td>
+<td><span class="model-signature">string</span></td>
+</tr><tr><td class="code"><label for="mgenerateState0.5865811327019428">generateState</label></td>
+<td>
+  <select class="parameter " name="generateState" id="mgenerateState0.5865811327019428">
+
+      <option selected="" value=""></option>
+
+
+      <option value="true"> true  </option>
+
+
+      <option value="false"> false  </option>
+
+
+  </select>
+</td>
+<td class="markdown"></td>
+<td>query</td>
+<td><span class="model-signature">boolean</span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_RegisterBymodel">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RegisterBymodel" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RegisterBymodel" class="toggleOperation ">/api/Account/Register</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RegisterBymodel" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_RegisterBymodel_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.33286597747104607">Response Content Type</label>
+<select name="responseContentType" id="rct0.33286597747104607">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mmodel0.04630791455579897">model</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="model" id="mmodel0.04630791455579897"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(588.5px, 4778.44px);" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".c"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".c.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".c.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.9400509948706637" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.9400509948706637">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">RegisterBindingModel {</span><div><span class="propName required">Email</span> (<span class="propType">string</span>),</div><span class="propWrap"><div><span class="propName required">Password</span> (<span class="propType">string</span>)<table class="optionsWrapper"><tbody><tr><th colspan="2">string</th></tr><tr><td class="optionName">Min. Length:</td><td>6</td></tr><tr><td class="optionName">Max. Length:</td><td>100</td></tr></tbody></table>,</div><div><span class="propName ">ConfirmPassword</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </span></div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Password</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">ConfirmPassword</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Account_Account_RegisterExternalBymodel">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RegisterExternalBymodel" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RegisterExternalBymodel" class="toggleOperation ">/api/Account/RegisterExternal</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Account/Account_RegisterExternalBymodel" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Account_Account_RegisterExternalBymodel_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Object {</span><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{}</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.8393877276366342">Response Content Type</label>
+<select name="responseContentType" id="rct0.8393877276366342">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mmodel0.18938773865979175">model</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="model" id="mmodel0.18938773865979175"></textarea><grammarly-btn><div style="visibility: hidden; z-index: 2;" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".f"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".f.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".f.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.23667213556683975" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.23667213556683975">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">RegisterExternalBindingModel {</span><div><span class="propName required">Email</span> (<span class="propType">string</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li></ul>
+</li><li id="resource_Contacts" class="resource active"><div class="heading">
+  <h2>
+    <a href="http://localhost:61181/swagger/ui/index#!/Contacts" class="toggleEndpointList" data-id="Contacts">Contacts</a> 
+  </h2>
+  <ul class="options">
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#!/Contacts" id="endpointListTogger_Contacts" class="toggleEndpointList" data-id="Contacts" data-sw-translate="">Show/Hide</a>
+    </li>
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#" class="collapseResource" data-id="Contacts" data-sw-translate="">
+        List Operations
+      </a>
+    </li>
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#" class="expandResource" data-id="Contacts" data-sw-translate="">
+        Expand Operations
+      </a>
+    </li>
+  </ul>
+</div>
+<ul class="endpoints" id="Contacts_endpoint_list">
+
+<li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Contacts_Contacts_GetContactByBeaconIdBybeaconId">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContactByBeaconIdBybeaconId" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContactByBeaconIdBybeaconId" class="toggleOperation ">/api/ContactByBeaconId</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContactByBeaconIdBybeaconId" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Contacts_Contacts_GetContactByBeaconIdBybeaconId_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{
+  "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+  "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.5643253790358214">Response Content Type</label>
+<select name="responseContentType" id="rct0.5643253790358214">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mbeaconId0.5520749621870926">beaconId</label></td>
+<td>
+<input class="parameter required" minlength="1" name="beaconId" placeholder="(required)" id="mbeaconId0.5520749621870926" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>query</td>
+<td><span class="model-signature">string</span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Contacts_Contacts_GetContacts">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContacts" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContacts" class="toggleOperation ">/api/Contacts</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContacts" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Contacts_Contacts_GetContacts_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Inline Model [</span><div>Contact</div><span class="strong">]</span><br><span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">[
+  {
+    "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+    "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+    "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+  }</span>
+]</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.6309243645076608">Response Content Type</label>
+<select name="responseContentType" id="rct0.6309243645076608">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Contacts_Contacts_PostContactBycontact">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_PostContactBycontact" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_PostContactBycontact" class="toggleOperation ">/api/Contacts</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_PostContactBycontact" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Contacts_Contacts_PostContactBycontact_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{
+  "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+  "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.3702491961658403">Response Content Type</label>
+<select name="responseContentType" id="rct0.3702491961658403">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mcontact0.835280859798349">contact</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="contact" id="mcontact0.835280859798349"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(589.5px, 6977.44px);" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".i"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".i.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".i.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.8468927317747619" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.8468927317747619">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+  "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="delete operation" id="Contacts_Contacts_DeleteContactByid">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_DeleteContactByid" class="toggleOperation">delete</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_DeleteContactByid" class="toggleOperation ">/api/Contacts/{id}</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_DeleteContactByid" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Contacts_Contacts_DeleteContactByid_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{
+  "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+  "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.7280421255584155">Response Content Type</label>
+<select name="responseContentType" id="rct0.7280421255584155">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mid0.30331362620388913">id</label></td>
+<td>
+<input class="parameter required" minlength="1" name="id" placeholder="(required)" id="mid0.30331362620388913" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>path</td>
+<td><span class="model-signature">integer</span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Contacts_Contacts_GetContactByid">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContactByid" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContactByid" class="toggleOperation ">/api/Contacts/{id}</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_GetContactByid" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Contacts_Contacts_GetContactByid_content">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link selected" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="">
+    <span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: none;">
+    <pre><code class="json">{
+  "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+  "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.17687783963771286">Response Content Type</label>
+<select name="responseContentType" id="rct0.17687783963771286">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mid0.7794118824743983">id</label></td>
+<td>
+<input class="parameter required" minlength="1" name="id" placeholder="(required)" id="mid0.7794118824743983" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>path</td>
+<td><span class="model-signature">integer</span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="put operation" id="Contacts_Contacts_PutContactByidcontact">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_PutContactByidcontact" class="toggleOperation">put</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_PutContactByidcontact" class="toggleOperation ">/api/Contacts/{id}</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Contacts/Contacts_PutContactByidcontact" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Contacts_Contacts_PutContactByidcontact_content">
+
+        
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mid0.25670213925029106">id</label></td>
+<td>
+<input class="parameter required" minlength="1" name="id" placeholder="(required)" id="mid0.25670213925029106" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>path</td>
+<td><span class="model-signature">integer</span></td>
+</tr><tr><td class="code required"><label for="mcontact0.7974313286129178">contact</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="contact" id="mcontact0.7974313286129178"></textarea><grammarly-btn><div style="z-index: 2; opacity: 1; transform: translate(589.5px, 8443.44px);" class="_9b5ef6-textarea_btn _9b5ef6-not_focused" data-grammarly-reactid=".l"><div class="_9b5ef6-transform_wrap" data-grammarly-reactid=".l.0"><div title="Protected by Grammarly" class="_9b5ef6-status" data-grammarly-reactid=".l.0.0">&nbsp;</div></div></div></grammarly-btn>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.44521768518228444" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.44521768518228444">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">Contact {</span><div><span class="propName ">ContactId</span> (<span class="propType">integer</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Name</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Profession</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">interests</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">imgUrl</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">BeaconId</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>),</div><div><span class="propName ">Email</span> (<span class="propType">string</span>, <span class="propOptKey">optional</span>)</div><span class="strong">}</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">{
+  "<span class="attribute">ContactId</span>": <span class="value"><span class="number">0</span></span>,
+  "<span class="attribute">Name</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Profession</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">interests</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">imgUrl</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">BeaconId</span>": <span class="value"><span class="string">"string"</span></span>,
+  "<span class="attribute">Email</span>": <span class="value"><span class="string">"string"</span>
+}</span></code></pre>
+    <small class="notice" data-sw-translate="">Click to set as parameter value</small>
+  </div>
+</div>
+
+</div></div></div></span></td>
+</tr></tbody>
+          </table>
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Response Messages</h4>
+          <table class="fullwidth">
+            <thead>
+            <tr>
+              <th data-sw-translate="">HTTP Status Code</th>
+              <th data-sw-translate="">Reason</th>
+              <th data-sw-translate="">Response Model</th>
+              <th data-sw-translate="">Headers</th>
+            </tr>
+            </thead>
+            <tbody class="operation-status">
+            <tr><td width="15%" class="code">204</td>
+<td class="markdown"><p>No Content</p>
+</td>
+<td width="50%"><span class="model-signature"></span></td>
+<td class="headers">
+  <table>
+    <tbody>
+    </tbody>
+  </table>
+</td></tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li></ul>
+</li><li id="resource_Values" class="resource"><div class="heading">
+  <h2>
+    <a href="http://localhost:61181/swagger/ui/index#!/Values" class="toggleEndpointList" data-id="Values">Values</a> 
+  </h2>
+  <ul class="options">
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#!/Values" id="endpointListTogger_Values" class="toggleEndpointList" data-id="Values" data-sw-translate="">Show/Hide</a>
+    </li>
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#" class="collapseResource" data-id="Values" data-sw-translate="">
+        List Operations
+      </a>
+    </li>
+    <li>
+      <a href="http://localhost:61181/swagger/ui/index#" class="expandResource" data-id="Values" data-sw-translate="">
+        Expand Operations
+      </a>
+    </li>
+  </ul>
+</div>
+<ul class="endpoints" id="Values_endpoint_list" style="display:none">
+
+<li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Values_Values_Get">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_Get" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_Get" class="toggleOperation ">/api/Values</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_Get" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Values_Values_Get_content" style="display:none">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            <div class="markdown"><p>OK</p>
+</div>
+          <p><span class="model-signature"><div><div>
+<ul class="signature-nav">
+  <li><a class="description-link" href="http://localhost:61181/swagger/ui/index#" data-sw-translate="">Model</a></li>
+  
+</ul>
+<div>
+
+<div class="signature-container">
+  <div class="description" style="display: none;">
+    <span class="strong">Inline Model [</span><div>string</div><span class="strong">]</span>
+  </div>
+
+  <div class="snippet" style="display: block;">
+    <pre><code class="json">[
+  <span class="string">"string"</span>
+]</code></pre>
+    <small class="notice" data-sw-translate=""></small>
+  </div>
+</div>
+
+</div></div></div></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.8478029162403111">Response Content Type</label>
+<select name="responseContentType" id="rct0.8478029162403111">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="post operation" id="Values_Values_PostByvalue">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_PostByvalue" class="toggleOperation">post</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_PostByvalue" class="toggleOperation ">/api/Values</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_PostByvalue" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Values_Values_PostByvalue_content" style="display:none">
+
+        
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mvalue0.8455548679247882">value</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="value" id="mvalue0.8455548679247882"></textarea>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.11947710324258787" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.11947710324258787">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature">string</span></td>
+</tr></tbody>
+          </table>
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Response Messages</h4>
+          <table class="fullwidth">
+            <thead>
+            <tr>
+              <th data-sw-translate="">HTTP Status Code</th>
+              <th data-sw-translate="">Reason</th>
+              <th data-sw-translate="">Response Model</th>
+              <th data-sw-translate="">Headers</th>
+            </tr>
+            </thead>
+            <tbody class="operation-status">
+            <tr><td width="15%" class="code">204</td>
+<td class="markdown"><p>No Content</p>
+</td>
+<td width="50%"><span class="model-signature"></span></td>
+<td class="headers">
+  <table>
+    <tbody>
+    </tbody>
+  </table>
+</td></tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="delete operation" id="Values_Values_DeleteByid">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_DeleteByid" class="toggleOperation">delete</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_DeleteByid" class="toggleOperation ">/api/Values/{id}</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_DeleteByid" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Values_Values_DeleteByid_content" style="display:none">
+
+        
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mid0.6089235778345186">id</label></td>
+<td>
+<input class="parameter required" minlength="1" name="id" placeholder="(required)" id="mid0.6089235778345186" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>path</td>
+<td><span class="model-signature">integer</span></td>
+</tr></tbody>
+          </table>
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Response Messages</h4>
+          <table class="fullwidth">
+            <thead>
+            <tr>
+              <th data-sw-translate="">HTTP Status Code</th>
+              <th data-sw-translate="">Reason</th>
+              <th data-sw-translate="">Response Model</th>
+              <th data-sw-translate="">Headers</th>
+            </tr>
+            </thead>
+            <tbody class="operation-status">
+            <tr><td width="15%" class="code">204</td>
+<td class="markdown"><p>No Content</p>
+</td>
+<td width="50%"><span class="model-signature"></span></td>
+<td class="headers">
+  <table>
+    <tbody>
+    </tbody>
+  </table>
+</td></tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="get operation" id="Values_Values_GetByid">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_GetByid" class="toggleOperation">get</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_GetByid" class="toggleOperation ">/api/Values/{id}</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_GetByid" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Values_Values_GetByid_content" style="display:none">
+
+        
+          <h4><span data-sw-translate="">Response Class</span> (<span data-sw-translate="">Status</span> 200)</h4>
+            
+          <p><span class="model-signature"></span></p>
+          <br>
+          <div class="response-content-type"><div><label data-sw-translate="" for="rct0.25346427895417944">Response Content Type</label>
+<select name="responseContentType" id="rct0.25346427895417944">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+</select>
+</div></div>
+
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mid0.6513479243644253">id</label></td>
+<td>
+<input class="parameter required" minlength="1" name="id" placeholder="(required)" id="mid0.6513479243644253" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>path</td>
+<td><span class="model-signature">integer</span></td>
+</tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li><li class="endpoint">
+  <ul class="operations">
+    <li class="put operation" id="Values_Values_PutByidvalue">
+      <div class="heading">
+        <h3>
+          <span class="http_method">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_PutByidvalue" class="toggleOperation">put</a>
+          </span>
+          <span class="path">
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_PutByidvalue" class="toggleOperation ">/api/Values/{id}</a>
+          </span>
+        </h3>
+        <ul class="options">
+          <li>
+          <a href="http://localhost:61181/swagger/ui/index#!/Values/Values_PutByidvalue" class="toggleOperation"></a>
+          </li>
+        </ul>
+      </div>
+      <div class="content" id="Values_Values_PutByidvalue_content" style="display:none">
+
+        
+
+
+        <form accept-charset="UTF-8" class="sandbox">
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Parameters</h4>
+          <table class="fullwidth">
+          <thead>
+            <tr>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter</th>
+            <th style="width: 310px; max-width: 310px" data-sw-translate="">Value</th>
+            <th style="width: 200px; max-width: 200px" data-sw-translate="">Description</th>
+            <th style="width: 100px; max-width: 100px" data-sw-translate="">Parameter Type</th>
+            <th style="width: 220px; max-width: 230px" data-sw-translate="">Data Type</th>
+            </tr>
+          </thead>
+          <tbody class="operation-params">
+
+          <tr><td class="code required"><label for="mid0.0624114501662818">id</label></td>
+<td>
+<input class="parameter required" minlength="1" name="id" placeholder="(required)" id="mid0.0624114501662818" type="text" value=""></td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>path</td>
+<td><span class="model-signature">integer</span></td>
+</tr><tr><td class="code required"><label for="mvalue0.9457154854142684">value</label></td>
+<td>
+				<textarea class="body-textarea required" placeholder="(required)" name="value" id="mvalue0.9457154854142684"></textarea>
+				<div class="editor_holder"></div>
+				<br>
+				<div class="parameter-content-type"><div><label for="pct0.8557214855013298" data-sw-translate="">Parameter content type:</label>
+<select name="parameterContentType" id="pct0.8557214855013298">
+  <option value="application/json">application/json</option>
+  <option value="text/json">text/json</option>
+  <option value="application/x-www-form-urlencoded">application/x-www-form-urlencoded</option>
+</select>
+</div></div>
+</td>
+<td>
+	<strong><span class="markdown"></span></strong>
+</td>
+<td>body</td>
+<td><span class="model-signature">string</span></td>
+</tr></tbody>
+          </table>
+          <div style="margin:0;padding:0;display:inline"></div>
+          <h4 data-sw-translate="">Response Messages</h4>
+          <table class="fullwidth">
+            <thead>
+            <tr>
+              <th data-sw-translate="">HTTP Status Code</th>
+              <th data-sw-translate="">Reason</th>
+              <th data-sw-translate="">Response Model</th>
+              <th data-sw-translate="">Headers</th>
+            </tr>
+            </thead>
+            <tbody class="operation-status">
+            <tr><td width="15%" class="code">204</td>
+<td class="markdown"><p>No Content</p>
+</td>
+<td width="50%"><span class="model-signature"></span></td>
+<td class="headers">
+  <table>
+    <tbody>
+    </tbody>
+  </table>
+</td></tr></tbody>
+          </table>
+          <div class="sandbox_header">
+            <input class="submit" type="submit" value="Try it out!" data-sw-translate="">
+            <a href="http://localhost:61181/swagger/ui/index#" class="response_hider" style="display:none" data-sw-translate="">Hide Response</a>
+            <span class="response_throbber" style="display:none"></span>
+          </div>
+        </form>
+        <div class="response" style="display:none">
+          <h4 class="curl">Curl</h4>
+          <div class="block curl"></div>
+          <h4 data-sw-translate="">Request URL</h4>
+          <div class="block request_url"></div>
+          <h4 data-sw-translate="">Response Body</h4>
+          <div class="block response_body"></div>
+          <h4 data-sw-translate="">Response Code</h4>
+          <div class="block response_code"></div>
+          <h4 data-sw-translate="">Response Headers</h4>
+          <div class="block response_headers"></div>
+        </div>
+      </div>
+    </li>
+  </ul>
+</li></ul>
+</li></ul>
+
+  <div class="footer">
+    <h4 style="color: #999">[ <span style="font-variant: small-caps">base url</span>: 
+  , <span style="font-variant: small-caps" data-sw-translate="">api version</span>: v1
+    ]
+    </h4>
+    </div>
+</div>
+</div>
+
+
+</body><span class="gr__tooltip"><span class="gr__tooltip-content"></span><i class="gr__tooltip-logo"></i><span class="gr__triangle"></span></span><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div><div style="visibility: hidden; top: -9999px; position: absolute; opacity: 0;"></div></html>
