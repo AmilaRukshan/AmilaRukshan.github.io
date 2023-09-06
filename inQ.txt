@@ -1,0 +1,70 @@
+SQL :
++++++++++++++++++++++++ 
+truncate and delete
+Stored procedures
+Primary key, unique key, composite key, candidate key
+Unique key vs Super key
+what is normalisation
+JOIN Types
+Stored Procedure vs Functions
+Indexes and its used for ?
+how to use "having" in sql
+
+OOP:
+OOP ?
+Object vs Class
+Multiple inheritance in interface
+
+Other:
+Project in detail
+Tell me about yourself
+
+Coding:
+Difference between public variable and public properties
+Filters in MVC
+ref and out keyword
+readonly vs constant
+sealed class and it's uses
+IEnumerable, IQueryable
+Anti-forgery token - uses
+Class vs struct
+Boxing and UnBoxing
+Explain String is immutable
+Abstract class vs interface
+Value type and Reference Type
+Primitive Data types
+implicit vs explicit type conversion 
+Web service vs Rest API
+What is the RestFul Service
+What is dependency injection
+what is constructor and its types in c#
+overriding method in c# (virtual, overridden keywords)
+
+.Net:
+
+Managed vs Unmanaged Classes
+Access Modifiers
+Finalized vs Disposed
+string vs stringbuilder vs stringbuffer
+string ==, Equals , Compare, CompareTo difference
+ienumerable vs ienumerator
+Collections
+HashSet vs HashTable
+Array vs ArrayList
+hashtable vs dictionary 
+Generics Explain
+
+MVC : 
+JWT ?
+MVC ?
+What are the Actions in MVC
+What are the Filters in MVC
+What is a Partial View
+
+Entity framework:
+Eager Loading, Lazy Loading And Explicit Loading
+Other ORM used -> Dapper ..
+What is the DBContext
+
+Reference types
+CI/CD Pipeline
