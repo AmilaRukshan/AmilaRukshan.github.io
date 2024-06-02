@@ -68,3 +68,7 @@ What is the DBContext
 
 Reference types
 CI/CD Pipeline
+
+Domain-Driven Design (DDD) is a software development philosophy that emphasizes the importance of understanding and modeling the business domain.
+Test Driven Development (TDD) is a software development approach where tests are written before the actual code.
+
