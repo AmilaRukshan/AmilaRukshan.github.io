@@ -71,4 +71,5 @@ CI/CD Pipeline
 
 Domain-Driven Design (DDD) is a software development philosophy that emphasizes the importance of understanding and modeling the business domain.
 Test Driven Development (TDD) is a software development approach where tests are written before the actual code.
+https://dev.to/me_janki/test-driven-development-tdd-vs-behavior-driven-development-bdd-vs-domain-driven-design-ddd-26b7#:~:text=BDD%20is%20a%20team%20approach,of%20modeling%20complex%20business%20domains.
 
