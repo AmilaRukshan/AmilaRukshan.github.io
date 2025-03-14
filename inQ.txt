@@ -26,6 +26,7 @@ ref and out keyword
 readonly vs constant
 sealed class and it's uses
 IEnumerable, IQueryable
+ienumerable ienumerator
 Anti-forgery token - uses
 Class vs struct
 Boxing and UnBoxing
@@ -68,6 +69,8 @@ What is the DBContext
 
 Reference types
 CI/CD Pipeline
+
+https://www.baeldung.com/solid-principles
 
 Domain-Driven Design (DDD) is a software development philosophy that emphasizes the importance of understanding and modeling the business domain.
 Test Driven Development (TDD) is a software development approach where tests are written before the actual code.
